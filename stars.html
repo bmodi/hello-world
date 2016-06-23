@@ -93,40 +93,14 @@ function create() {
     stars.enableBody = true;
     diamonds.enableBody = true;
 
-    //  Here we'll create 12 of them evenly spaced apart
-    for (var i = 0; i < 6; i++)
-    {
-        //  Create a star inside of the 'stars' group
-        var star = stars.create(i * 70, 0, 'star');
-
-        //  Let gravity do its thing
-        star.body.gravity.y = 50 + 100 * Math.random();
-        star.body.gravity.x = 5 * Math.random() - 2;
-
-        //  This just gives each star a slightly random bounce value
-        star.body.bounce.y = 0.7 + Math.random() * 0.2;
-
-        star.body.collideWorldBounds = true;
-
-        //  Create a star inside of the 'stars' group
-        var diamond = diamonds.create(i * 70, 0, 'diamond');
-
-        //  Let gravity do its thing
-        diamond.body.gravity.y = 50 + 100 * Math.random();
-        diamond.body.gravity.x = 5 * Math.random() - 2;
-
-        //  This just gives each star a slightly random bounce value
-        diamond.body.bounce.y = 0.7 + Math.random() * 0.2;
-
-        diamond.body.collideWorldBounds = true;
-    }
+    createStarsAndDiamonds();
 
     //  The score and lives
     scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
     lifeText = game.add.text(16, 40, 'lives: 0', { fontSize: '32px', fill: '#000' });
 
     //  State Text (for game end)
-    stateText = game.add.text(game.world.centerX,game.world.centerY,' ', { font: '84px Arial', fill: '#fff' });
+    stateText = game.add.text(game.world.centerX,game.world.centerY,' ', { font: '48px Arial', fill: '#fff' });
     stateText.anchor.setTo(0.5, 0.5);
     stateText.visible = false;
 
@@ -194,6 +168,16 @@ function collectStar (player, star) {
     score += 10;
     scoreText.text = 'Score: ' + score;
     lifeText.text = 'Lives: ' + lives;
+    
+    if (stars.countLiving() == 0) {
+        player.kill();
+
+        stateText.text=" YOU WIN!  GAME OVER \n Click to restart";
+        stateText.visible = true;
+
+        //the "click to restart" handler
+        game.input.onTap.addOnce(restart,this);
+    }
 }
 
 function diamondKill (player, diamond) {
@@ -211,19 +195,22 @@ function diamondKill (player, diamond) {
     {
         player.kill();
 
-        stateText.text=" GAME OVER \n Click to restart";
+        stateText.text=" GAME OVER - YOU LOSE\n Click to restart";
         stateText.visible = true;
 
         //the "click to restart" handler
         game.input.onTap.addOnce(restart,this);
     }
-    
-    
 }
 
 function restart () {
 
     //  A new level starts
+    stars.removeAll();
+    diamonds.removeAll();
+    createStarsAndDiamonds();
+    player.x=32;
+    player.y=game.world.height - 150;
     
     //resets the life count
     lives=3;
@@ -233,6 +220,36 @@ function restart () {
     player.revive();
     //hides the text
     stateText.visible = false;
+}
+
+function createStarsAndDiamonds() {
+        //  Here we'll create 12 of them evenly spaced apart
+    for (var i = 0; i < 6; i++)
+    {
+        //  Create a star inside of the 'stars' group
+        var star = stars.create(i * 70, 0, 'star');
+
+        //  Let gravity do its thing
+        star.body.gravity.y = 50 + 100 * Math.random();
+        star.body.gravity.x = 5 * Math.random() - 2;
+
+        //  This just gives each star a slightly random bounce value
+        star.body.bounce.y = 0.7 + Math.random() * 0.2;
+
+        star.body.collideWorldBounds = true;
+
+        //  Create a star inside of the 'stars' group
+        var diamond = diamonds.create(i * 70, 0, 'diamond');
+
+        //  Let gravity do its thing
+        diamond.body.gravity.y = 50 + 100 * Math.random();
+        diamond.body.gravity.x = 5 * Math.random() - 2;
+
+        //  This just gives each star a slightly random bounce value
+        diamond.body.bounce.y = 0.7 + Math.random() * 0.2;
+
+        diamond.body.collideWorldBounds = true;
+    }
 }
 
 </script>
