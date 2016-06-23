@@ -38,6 +38,7 @@ var score = 0;
 var lives = 3;
 var scoreText;
 var lifeText;
+var stateText;
 
 function create() {
 
@@ -120,9 +121,14 @@ function create() {
         diamond.body.collideWorldBounds = true;
     }
 
-    //  The score
+    //  The score and lives
     scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
     lifeText = game.add.text(16, 40, 'lives: 0', { fontSize: '32px', fill: '#000' });
+
+    //  State Text (for game end)
+    stateText = game.add.text(game.world.centerX,game.world.centerY,' ', { font: '84px Arial', fill: '#fff' });
+    stateText.anchor.setTo(0.5, 0.5);
+    stateText.visible = false;
 
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
@@ -199,6 +205,34 @@ function diamondKill (player, diamond) {
     lives -= 1;
     scoreText.text = 'Score: ' + score;
     lifeText.text = 'Lives: ' + lives;
+    
+    // When the player dies
+    if (lives < 1)
+    {
+        player.kill();
+
+        stateText.text=" GAME OVER \n Click to restart";
+        stateText.visible = true;
+
+        //the "click to restart" handler
+        game.input.onTap.addOnce(restart,this);
+    }
+    
+    
+}
+
+function restart () {
+
+    //  A new level starts
+    
+    //resets the life count
+    lives=3;
+    score=0;
+    
+    //revives the player
+    player.revive();
+    //hides the text
+    stateText.visible = false;
 }
 
 </script>
