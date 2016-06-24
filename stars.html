@@ -93,8 +93,8 @@ function create() {
     diamonds.enableBody = true;
 
     //  The score and lives
-    scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-    lifeText = game.add.text(16, 40, 'lives: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = game.add.text(16, 16, ' ', { fontSize: '32px', fill: '#000' });
+    lifeText = game.add.text(16, 40, ' ', { fontSize: '32px', fill: '#000' });
 
     //  State Text (for game end)
     stateText = game.add.text(game.world.centerX,game.world.centerY,' ', { font: '48px Arial', fill: '#fff' });
@@ -104,7 +104,7 @@ function create() {
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
 
-    restart();
+    endGame("Welcome to STARS!  Click to Start.");
 }
 
 function update() {
@@ -117,7 +117,7 @@ function update() {
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     game.physics.arcade.overlap(player, stars, collectStar, null, this);
 
-    //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
+    //  Checks to see if the player overlaps with any of the diamonds, if he does call the diamondKill function
     game.physics.arcade.overlap(player, diamonds, diamondKill, null, this);
 
     //  Reset the players velocity (movement)
@@ -147,7 +147,6 @@ function update() {
     
     //  Allow the player to jump if they are touching the ground.
     if (cursors.up.isDown && player.body.touching.down)
-    if (cursors.up.isDown)
     {
         player.body.velocity.y = -350;
     }
@@ -163,13 +162,7 @@ function collectStar(player, star) {
     updateInfoBlock();
     
     if (stars.countLiving() == 0) {
-        player.kill();
-
-        stateText.text=" YOU WIN!  GAME OVER \n Click to restart";
-        stateText.visible = true;
-
-        //the "click to restart" handler
-        game.input.onTap.addOnce(restart,this);
+        endGame(" YOU WIN!  GAME OVER \n Click to restart");
     }
 }
 
@@ -185,14 +178,18 @@ function diamondKill(player, diamond) {
     // When the player dies
     if (lives < 1)
     {
-        player.kill();
-
-        stateText.text=" GAME OVER - YOU LOSE\n Click to restart";
-        stateText.visible = true;
-
-        //the "click to restart" handler
-        game.input.onTap.addOnce(restart,this);
+        endGame(" GAME OVER - YOU LOSE\n Click to restart");
     }
+}
+
+function endGame(endingText) {
+    player.kill();
+
+    stateText.text=endingText;
+    stateText.visible = true;
+
+    //the "click to restart" handler
+    game.input.onTap.addOnce(restart,this);
 }
 
 function restart() {
@@ -222,29 +219,11 @@ function createStarsAndDiamonds() {
         var xPosition = i*spacing + spacing/2;
         //  Create a star inside of the 'stars' group
         var star = stars.create(xPosition, 0, 'star');
-
-        //  Let gravity do its thing
-        star.body.gravity.y = 50 + 100 * Math.random();
-        star.body.gravity.x = 5 * Math.random() - 2;
-
-        //  This just gives each star a slightly random bounce value
-        star.body.bounce.y = 0.7 + Math.random() * 0.2;
-        star.body.bounce.x = 0.7 + Math.random() * 0.8;
-
-        star.body.collideWorldBounds = true;
+        applyMotion(star);
 
         //  Create a star inside of the 'stars' group
         var diamond = diamonds.create(xPosition, 0, 'diamond');
-
-        //  Let gravity do its thing
-        diamond.body.gravity.y = 50 + 100 * Math.random();
-        diamond.body.gravity.x = 5 * Math.random() - 2;
-
-        //  This just gives each star a slightly random bounce value
-        diamond.body.bounce.y = 0.7 + Math.random() * 0.2;
-        diamond.body.bounce.x = 0.7 + Math.random() * 0.8;
-
-        diamond.body.collideWorldBounds = true;
+        applyMotion(diamond);
     }
 }
 
@@ -274,6 +253,17 @@ function drawWall(x1, y1, x2, y2) {
 function updateInfoBlock() {
     scoreText.text = 'Score: ' + score;
     lifeText.text = 'Lives: ' + lives;
+}
+
+function applyMotion(gameElement) {
+    gameElement.body.gravity.y = 50 + 100 * Math.random();
+    gameElement.body.gravity.x = 5 * Math.random() - 2;
+
+    //  This just gives each element a slightly random bounce value
+    gameElement.body.bounce.y = 0.7 + Math.random() * 0.2;
+    gameElement.body.bounce.x = 0.7 + Math.random() * 0.8;
+
+    gameElement.body.collideWorldBounds = true;
 }
 
 </script>
