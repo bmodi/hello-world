@@ -31,7 +31,7 @@ function preload() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/platform.png');
     game.load.image('sand', 'assets/sand.png');
-    game.load.image('blue', 'assets/bluetile.png');
+    game.load.image('lava', 'assets/lava.png');
     game.load.image('star', 'assets/star.png');
     game.load.image('diamond', 'assets/diamond.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
@@ -72,11 +72,12 @@ function create() {
     //  This stops it from falling away when you jump on it
     ground.body.immovable = true;
 
-    //  Now let's create two ledges
+    //  Now let's create some ledges
     drawWall('sand', 0, 225, 200, 225);
-    drawWall('blue', 500, 350, 800, 350);
-    drawWall('blue', 50, 225, 150, 225);
-    drawWall('sand', 600, 350, 700, 350);
+    drawWall('lava', 150, 225, 175, 225);
+
+    drawWall('sand', 500, 350, 800, 350);
+    drawWall('lava', 600, 350, 625, 350);
 
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 150, 'dude');
