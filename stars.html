@@ -50,7 +50,6 @@ var lifeText;
 var stateText;
 
 function create() {
-
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -118,7 +117,6 @@ function create() {
 }
 
 function update() {
-
     //  Collide the player and the stars with the platforms
     game.physics.arcade.collide(player, platforms);
     game.physics.arcade.collide(stars, platforms);
@@ -137,21 +135,18 @@ function update() {
     {
         //  Move to the left
         player.body.velocity.x = -150;
-
         player.animations.play('left');
     }
     else if (cursors.right.isDown)
     {
         //  Move to the right
         player.body.velocity.x = 150;
-
         player.animations.play('right');
     }
     else
     {
         //  Stand still
         player.animations.stop();
-
         player.frame = 4;
     }
     
@@ -163,7 +158,6 @@ function update() {
 }
 
 function collectStar(player, star) {
-    
     // Removes the star from the screen
     star.kill();
 
@@ -177,7 +171,6 @@ function collectStar(player, star) {
 }
 
 function diamondKill(player, diamond) {
-    
     // Removes the star from the screen
     diamond.kill();
     
@@ -246,16 +239,7 @@ function createStarsAndDiamonds() {
     }
 }
 
-function drawWallBlock( type, sandPosX, sandPosY) {
-    var sandBlock;
-    sandBlock = platforms.create(sandPosX, sandPosY, type);
-    sandBlock.body.immovable = true;
-}
-
 function drawWall( type, x1, y1, x2, y2) {
-    var posX=x1;
-    var posY=y1;
-    
     var length = Math.sqrt( Math.pow(Math.abs(x2-x1),2) + Math.pow(Math.abs(y2-y1),2) );
     var block_count = Math.ceil( length/25 )+1;
     
@@ -263,9 +247,10 @@ function drawWall( type, x1, y1, x2, y2) {
     var yInc = (y2-y1)/block_count;
     
     for( var i=0; i<block_count; i++ ) {
-        drawWallBlock( type, posX, posY );
-        posX += xInc;
-        posY += yInc;
+        var block = platforms.create(x1, y1, type);
+        block.body.immovable = true;
+        x1 += xInc;
+        y1 += yInc;
     }
 }
 
