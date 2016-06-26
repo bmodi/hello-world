@@ -215,7 +215,7 @@ function critterCapture(player, critter) {
 function endGame(endingText) {
     player.kill();
     critter.kill();
-
+    
     diamonds.setAll('body.velocity.x', 0);
     diamonds.setAll('body.velocity.y', 0);
     stars.setAll('body.velocity.x', 0);
@@ -243,6 +243,8 @@ function restart() {
     //resets the life count
     lives=3;
     score=0;
+    
+    // Move critter back to start
     critter.x=400;
     critter.y=50;
     
