@@ -40,7 +40,7 @@ function preload() {
 var player;
 var platforms;
 var cursors;
-var rect;
+var graphics;
 
 var stars;
 var diamonds;
@@ -73,18 +73,8 @@ function create() {
     ground.body.immovable = true;
 
     //  Now let's create some ledges
-//    rect = game.add.sprite(0, 350, null);
-    rect = platforms.create(0, 350, null);
-    game.physics.enable(rect, Phaser.Physics.ARCADE);
-    rect.body.setSize(150, 25, 0, 0);
-    rect.body.immovable=true;
-
-    var graphics = game.add.graphics(0, 0);
-
-    // set a fill and line style
-    graphics.beginFill(0xF4A460);
-    graphics.lineStyle(1, 0x333333, 1);
-    graphics.drawRect(0, 350, 150, 25);
+    drawWall('sand', 0, 300, 200, 25);
+    drawWall('lava', 600, 350, 200, 25);
 
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 150, 'dude');
@@ -130,9 +120,6 @@ function update() {
     game.physics.arcade.collide(player, platforms);
     game.physics.arcade.collide(stars, platforms);
     game.physics.arcade.collide(diamonds, platforms);
-    game.physics.arcade.collide(player, rect);
-    game.physics.arcade.collide(stars, rect);
-    game.physics.arcade.collide(diamonds, rect);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     game.physics.arcade.overlap(player, stars, collectStar, null, this);
@@ -251,19 +238,20 @@ function createStarsAndDiamonds() {
     }
 }
 
-function drawWall( type, x1, y1, x2, y2) {
-    var length = Math.sqrt( Math.pow(Math.abs(x2-x1),2) + Math.pow(Math.abs(y2-y1),2) );
-    var block_count = Math.ceil( length/25 )+1;
-    
-    var xInc = (x2-x1)/block_count;
-    var yInc = (y2-y1)/block_count;
-    
-    for( var i=0; i<block_count; i++ ) {
-        var block = platforms.create(x1, y1, type);
-        block.body.immovable = true;
-        x1 += xInc;
-        y1 += yInc;
-    }
+function drawWall( type, x1, y1, length, height) {
+    //  Now let's create some ledges
+    var rect;
+    rect = platforms.create(x1, y1, null);
+    game.physics.enable(rect, Phaser.Physics.ARCADE);
+    rect.body.setSize(length, height, 0, 0);
+    rect.body.immovable=true;
+
+    graphics = game.add.graphics(0, 0);
+
+    // set a fill and line style
+    graphics.beginFill(0xF4A460);
+    graphics.lineStyle(1, 0x333333, 1);
+    graphics.drawRect(x1, y1, length, height);
 }
 
 function updateInfoBlock() {
