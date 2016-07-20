@@ -73,10 +73,10 @@ function create() {
     ground.body.immovable = true;
 
     //  Now let's create some ledges
-
-    rect = game.add.sprite(50, 250, null);
+//    rect = game.add.sprite(0, 350, null);
+    rect = platforms.create(0, 350, null);
     game.physics.enable(rect, Phaser.Physics.ARCADE);
-    rect.body.setSize(100, 100, 0, 0); // set the size of the 
+    rect.body.setSize(150, 25, 0, 0);
     rect.body.immovable=true;
 
     var graphics = game.add.graphics(0, 0);
@@ -84,30 +84,7 @@ function create() {
     // set a fill and line style
     graphics.beginFill(0xF4A460);
     graphics.lineStyle(1, 0x333333, 1);
-    graphics.drawRect(50, 250, 100, 100);
-    // window.graphics = graphics;
-
-    // drawWall('sand', 0, 325, 150, 325);
-    // drawWall('lava', 700, 350, 800, 350);
-    
-    var d=150;
-    // drawWall('sand', 400, d, 400, d);
-    // d+=25; drawWall('sand', 400, d, 405, d);
-    // d+=25; drawWall('sand', 400, d, 410, d);
-    // d+=25; drawWall('sand', 400, d, 415, d);
-    // d+=25; drawWall('sand', 400, d, 420, d);
-    d+=25; drawWall('sand', 400, d, 425, d);
-    // d+=25; drawWall('sand', 400, d, 430, d);
-    // d+=25; drawWall('sand', 400, d, 435, d);
-    // d+=25; drawWall('sand', 400, d, 440, d);
-    // d+=25; drawWall('sand', 400, d, 445, d);
-    // d+=25; drawWall('sand', 400, d, 450, d);
-
-    // drawWall('sand', 0, 0, 0, 0);
-    // drawWall('sand', 800-25, 0, 800-25, 0);
-    // drawWall('sand', 800-25, 600-25, 800-25, 600-25);
-    // drawWall('sand', 0, 600-25, 0, 600-25);
-
+    graphics.drawRect(0, 350, 150, 25);
 
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 150, 'dude');
@@ -144,8 +121,8 @@ function create() {
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
 
-    endGame("");
-//    endGame("Welcome to STARS!  Click to Start.");
+//    endGame("");
+    endGame("Welcome to STARS!  Click to Start.");
 }
 
 function update() {
