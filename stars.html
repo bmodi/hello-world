@@ -11,6 +11,7 @@
 	<meta charset="UTF-8" />
     <title>Simple Stars Game</title>
     <script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Colors.js/1.2.3/colors.min.js"></script>
     <style type="text/css">
         body
         {
@@ -31,6 +32,7 @@ function preload() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/platform.png');
     game.load.image('sand', 'assets/sand.png');
+    game.load.image('lava', 'assets/lava.png');
     game.load.image('star', 'assets/star.png');
     game.load.image('diamond', 'assets/diamond.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
@@ -41,6 +43,7 @@ var player;
 var critter;
 var platforms;
 var cursors;
+var graphics;
 
 var stars;
 var diamonds;
@@ -51,7 +54,6 @@ var lifeText;
 var stateText;
 
 function create() {
-
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -73,9 +75,9 @@ function create() {
     //  This stops it from falling away when you jump on it
     ground.body.immovable = true;
 
-    //  Now let's create two ledges
-    drawWall(0, 225, 200, 225);
-    drawWall(500, 350, 800, 350);
+    //  Now let's create some ledges
+    drawWall('red', 0, 300, 200, 25);
+    drawWall('goldenrod', 600, 350, 200, 25);
 
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 150, 'dude');
@@ -118,11 +120,11 @@ function create() {
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
 
+//    endGame("");
     endGame("Welcome to STARS!  Click to Start.");
 }
 
 function update() {
-
     //  Collide the player, the stars and the diamonds with the platforms
     game.physics.arcade.collide(player, platforms);
     game.physics.arcade.collide(stars, platforms);
@@ -144,21 +146,18 @@ function update() {
     {
         //  Move to the left
         player.body.velocity.x = -150;
-
         player.animations.play('left');
     }
     else if (cursors.right.isDown)
     {
         //  Move to the right
         player.body.velocity.x = 150;
-
         player.animations.play('right');
     }
     else
     {
         //  Stand still
         player.animations.stop();
-
         player.frame = 4;
     }
     
@@ -173,7 +172,6 @@ function update() {
 }
 
 function collectStar(player, star) {
-    
     // Removes the star from the screen
     star.kill();
 
@@ -187,7 +185,6 @@ function collectStar(player, star) {
 }
 
 function diamondKill(player, diamond) {
-    
     // Removes the star from the screen
     diamond.kill();
     
@@ -273,27 +270,20 @@ function createStarsAndDiamonds() {
     }
 }
 
-function drawWallBlock( sandPosX, sandPosY) {
-    var sandBlock;
-    sandBlock = platforms.create(sandPosX, sandPosY,'sand');
-    sandBlock.body.immovable = true;
-}
+function drawWall( colour, x1, y1, length, height) {
+    //  Now let's create some ledges
+    var rect;
+    rect = platforms.create(x1, y1, null);
+    game.physics.enable(rect, Phaser.Physics.ARCADE);
+    rect.body.setSize(length, height, 0, 0);
+    rect.body.immovable=true;
 
-function drawWall(x1, y1, x2, y2) {
-    var posX=x1;
-    var posY=y1;
-    
-    var length = Math.sqrt( Math.pow(Math.abs(x2-x1),2) + Math.pow(Math.abs(y2-y1),2) );
-    var block_count = Math.ceil( length/25 )+1;
-    
-    var xInc = (x2-x1)/block_count;
-    var yInc = (y2-y1)/block_count;
-    
-    for( var i=0; i<block_count; i++ ) {
-        drawWallBlock( posX, posY );
-        posX += xInc;
-        posY += yInc;
-    }
+    graphics = game.add.graphics(0, 0);
+
+    // set a fill and line style
+    graphics.beginFill(parseInt(window.Colors.name2hex(colour).substring(1), 16));
+    graphics.lineStyle(1, 0x333333, 1);
+    graphics.drawRect(x1, y1, length, height);
 }
 
 function updateInfoBlock() {
