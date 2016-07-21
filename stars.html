@@ -11,6 +11,7 @@
 	<meta charset="UTF-8" />
     <title>Simple Stars Game</title>
     <script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Colors.js/1.2.3/colors.min.js"></script>
     <style type="text/css">
         body
         {
@@ -73,8 +74,8 @@ function create() {
     ground.body.immovable = true;
 
     //  Now let's create some ledges
-    drawWall('sand', 0, 300, 200, 25);
-    drawWall('lava', 600, 350, 200, 25);
+    drawWall('red', 0, 300, 200, 25);
+    drawWall('goldenrod', 600, 350, 200, 25);
 
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 150, 'dude');
@@ -238,7 +239,7 @@ function createStarsAndDiamonds() {
     }
 }
 
-function drawWall( type, x1, y1, length, height) {
+function drawWall( colour, x1, y1, length, height) {
     //  Now let's create some ledges
     var rect;
     rect = platforms.create(x1, y1, null);
@@ -249,7 +250,7 @@ function drawWall( type, x1, y1, length, height) {
     graphics = game.add.graphics(0, 0);
 
     // set a fill and line style
-    graphics.beginFill(0xF4A460);
+    graphics.beginFill(parseInt(window.Colors.name2hex(colour).substring(1), 16));
     graphics.lineStyle(1, 0x333333, 1);
     graphics.drawRect(x1, y1, length, height);
 }
