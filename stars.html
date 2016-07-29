@@ -11,6 +11,7 @@
 	<meta charset="UTF-8" />
     <title>Simple Stars Game</title>
     <script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Colors.js/1.2.3/colors.min.js"></script>
     <style type="text/css">
         body
         {
@@ -40,6 +41,7 @@ function preload() {
 var player;
 var platforms;
 var cursors;
+var graphics;
 
 var stars;
 var diamonds;
@@ -72,8 +74,8 @@ function create() {
     ground.body.immovable = true;
 
     //  Now let's create some ledges
-    drawWall('sand', 0, 225, 200, 225);
-    drawWall('lava', 500, 350, 800, 350);
+    drawWall('red', 0, 300, 200, 25);
+    drawWall('goldenrod', 600, 350, 200, 25);
 
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 150, 'dude');
@@ -110,6 +112,7 @@ function create() {
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
 
+//    endGame("");
     endGame("Welcome to STARS!  Click to Start.");
 }
 
@@ -236,19 +239,20 @@ function createStarsAndDiamonds() {
     }
 }
 
-function drawWall( type, x1, y1, x2, y2) {
-    var length = Math.sqrt( Math.pow(Math.abs(x2-x1),2) + Math.pow(Math.abs(y2-y1),2) );
-    var block_count = Math.ceil( length/25 )+1;
-    
-    var xInc = (x2-x1)/block_count;
-    var yInc = (y2-y1)/block_count;
-    
-    for( var i=0; i<block_count; i++ ) {
-        var block = platforms.create(x1, y1, type);
-        block.body.immovable = true;
-        x1 += xInc;
-        y1 += yInc;
-    }
+function drawWall( colour, x1, y1, length, height) {
+    //  Now let's create some ledges
+    var rect;
+    rect = platforms.create(x1, y1, null);
+    game.physics.enable(rect, Phaser.Physics.ARCADE);
+    rect.body.setSize(length, height, 0, 0);
+    rect.body.immovable=true;
+
+    graphics = game.add.graphics(0, 0);
+
+    // set a fill and line style
+    graphics.beginFill(parseInt(window.Colors.name2hex(colour).substring(1), 16));
+    graphics.lineStyle(1, 0x333333, 1);
+    graphics.drawRect(x1, y1, length, height);
 }
 
 function updateInfoBlock() {
