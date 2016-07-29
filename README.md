@@ -1,3 +1,3 @@
-This is a HelloWorld project for JavaScript training purposes.
+This is a simple project for JavaScript training purposes.
 
 Open stars.html page to run a JavaScript application.
