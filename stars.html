@@ -31,8 +31,6 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 function preload() {
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/platform.png');
-    game.load.image('sand', 'assets/sand.png');
-    game.load.image('lava', 'assets/lava.png');
     game.load.image('star', 'assets/star.png');
     game.load.image('diamond', 'assets/diamond.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
@@ -46,7 +44,8 @@ var graphics;
 var stars;
 var diamonds;
 var score = 0;
-var lives = 3;
+var maxLives = 3;
+var currentLives = maxLives;
 var scoreText;
 var lifeText;
 var stateText;
@@ -74,8 +73,22 @@ function create() {
     ground.body.immovable = true;
 
     //  Now let's create some ledges
-    drawWall('red', 0, 300, 200, 25);
-    drawWall('goldenrod', 600, 350, 200, 25);
+    
+    // The giant "U" bucket
+    drawWall('lavender', 250, 250, 200, 25);
+    drawWall('olive', 250, 100, 25, 200);
+    drawWall('olive', 450, 100, 25, 200);
+    
+    // Some ledges to get into the bucket
+    drawWall('crimson', 0, 400, 200, 25);
+    drawWall('crimson', 600, 400, 200, 25);
+    drawWall('slateblue', 450, 250, 100, 25);
+    drawWall('deeppink', 150, 250, 100, 25);
+    
+    // drawWall('red', 0, 300, 200, 25);
+    // drawWall('goldenrod', 600, 350, 200, 25);
+    // drawWall('blue', 300, 100, 25, 200);
+    // drawWall('green', 200, 200, 200, 25);
 
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 150, 'dude');
@@ -175,11 +188,11 @@ function diamondKill(player, diamond) {
     diamond.kill();
     
     //  Add and update the score
-    lives -= 1;
+    currentLives -= 1;
     updateInfoBlock();
 
     // When the player dies
-    if (lives < 1)
+    if (currentLives < 1)
     {
         endGame(" GAME OVER - YOU LOSE\n Click to restart");
     }
@@ -213,7 +226,7 @@ function restart() {
     player.y=game.world.height - 150;
     
     //resets the life count
-    lives=3;
+    currentLives=maxLives;
     score=0;
     
     //revives the player
@@ -224,7 +237,7 @@ function restart() {
 }
 
 function createStarsAndDiamonds() {
-    var numStars=6;
+    var numStars=10;
     var spacing = game.world.width/numStars;
     for (var i = 0; i < numStars; i++)
     {
@@ -257,7 +270,7 @@ function drawWall( colour, x1, y1, length, height) {
 
 function updateInfoBlock() {
     scoreText.text = 'Score: ' + score;
-    lifeText.text = 'Lives: ' + lives;
+    lifeText.text = 'Lives: ' + currentLives;
 }
 
 function applyMotion(gameElement) {
